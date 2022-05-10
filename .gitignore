@@ -25,3 +25,6 @@ classes
 # Files from Forge MDK
 forge*changelog.txt
 logs/latest.log
+
+
+**/.DS_Store

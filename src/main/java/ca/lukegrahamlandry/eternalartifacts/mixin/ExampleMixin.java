@@ -1,4 +1,4 @@
-package com.example.examplemod.mixin;
+package ca.lukegrahamlandry.eternalartifacts.mixin;
 
 import net.minecraft.client.gui.screen.MainMenuScreen;
 import org.spongepowered.asm.mixin.Mixin;
