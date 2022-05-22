@@ -1,3 +1,6 @@
 {
-  "block.eternalartifacts.shell": "Prismarine Pearl"
+  "block.eternalartifacts.shell": "Prismarine Pearl",
+
+
+  "experience.eternalartifacts.fishing": "Fishing XP %d"
 }

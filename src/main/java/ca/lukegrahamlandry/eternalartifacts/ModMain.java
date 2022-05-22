@@ -4,6 +4,7 @@ import ca.lukegrahamlandry.eternalartifacts.config.FishingXpValues;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactExperience;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactExperienceImpl;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactXpCapability;
+import ca.lukegrahamlandry.eternalartifacts.network.NetworkInit;
 import ca.lukegrahamlandry.eternalartifacts.registry.BlockInit;
 import ca.lukegrahamlandry.eternalartifacts.registry.ItemInit;
 import ca.lukegrahamlandry.eternalartifacts.registry.TileTypeInit;
@@ -46,5 +47,6 @@ public class ModMain {
 
     private void setup(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(ArtifactExperience.class, new ArtifactXpCapability.Storage(), ArtifactExperienceImpl::new);
+        NetworkInit.registerPackets();
     }
 }

@@ -2,11 +2,10 @@
   "required": true,
   "package": "ca.lukegrahamlandry.eternalartifacts.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "examplemod.refmap.json",
+  "refmap": "eternalartifacts.refmap.json",
   "mixins": [
   ],
   "client": [
-    "ExampleMixin",
     "M1Fix"
   ],
   "injectors": {

@@ -37,10 +37,4 @@ public class CapabilityEvents {
 
         }
     }
-
-    @SubscribeEvent
-    public static void serverInit(final FMLServerStartingEvent event) {
-        ModMain.server = event.getServer();
-        ModMain.FISHING_XP_CONFIG = new FishingXpValues();
-    }
 }

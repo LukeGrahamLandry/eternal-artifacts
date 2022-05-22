@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -29,10 +28,10 @@ public class FishingXpValues {
         itemXpAmounts = new HashMap<>();
         tagXpAmounts = new HashMap<>();
 
-        if (!data.has("levelRatio")){
-            ModMain.LOGGER.info("[FishingXpValues] missing key 'levelRatio' defaulting to 1");
+        if (!data.has("xpDisplayRatio")){
+            ModMain.LOGGER.info("[FishingXpValues] missing key 'xpDisplayRatio' defaulting to 1");
         }
-        xpRatio = data.has("levelRatio") ? data.get("levelRatio").getAsInt() : 1;
+        xpRatio = data.has("xpDisplayRatio") ? data.get("xpDisplayRatio").getAsInt() : 1;
 
         JsonObject values = data.getAsJsonObject("values");
         for (Map.Entry<String, JsonElement> info : values.entrySet()){
@@ -52,17 +51,17 @@ public class FishingXpValues {
         }
     }
 
-    public int xpPerLevel(){
+    public int xpDisplayRatio(){
         return xpRatio; // will crash if called to early
     }
 
     public int getXpValue(Item item){
-        for (Map.Entry<ITag.INamedTag<Item>, Integer> info : tagXpAmounts.entrySet()){
-            if (info.getKey().contains(item)) return info.getValue();
-        }
-
         for (Map.Entry<Item, Integer> info : itemXpAmounts.entrySet()){
             if (info.getKey().equals(item)) return info.getValue();
+        }
+
+        for (Map.Entry<ITag.INamedTag<Item>, Integer> info : tagXpAmounts.entrySet()){
+            if (info.getKey().contains(item)) return info.getValue();
         }
 
         return 0;
