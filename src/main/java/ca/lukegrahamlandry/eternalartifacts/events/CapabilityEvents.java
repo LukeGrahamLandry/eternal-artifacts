@@ -2,6 +2,7 @@ package ca.lukegrahamlandry.eternalartifacts.events;
 
 
 import ca.lukegrahamlandry.eternalartifacts.ModMain;
+import ca.lukegrahamlandry.eternalartifacts.config.FishingXpValues;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactXpCapability;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,6 +11,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 @Mod.EventBusSubscriber(modid = ModMain.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CapabilityEvents {
@@ -34,5 +36,11 @@ public class CapabilityEvents {
         if (!event.getEntityLiving().level.isClientSide()){
 
         }
+    }
+
+    @SubscribeEvent
+    public static void serverInit(final FMLServerStartingEvent event) {
+        ModMain.server = event.getServer();
+        ModMain.FISHING_XP_CONFIG = new FishingXpValues();
     }
 }

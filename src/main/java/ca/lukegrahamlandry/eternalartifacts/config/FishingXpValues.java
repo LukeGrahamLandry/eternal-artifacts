@@ -25,7 +25,7 @@ public class FishingXpValues {
 
     // call after item init
     public void init(){
-        data = JsonConfig.load("fishingxpvalues.json");
+        data = JsonConfig.load(ModMain.MOD_ID, "fishingxpvalues.json");
         itemXpAmounts = new HashMap<>();
         tagXpAmounts = new HashMap<>();
 

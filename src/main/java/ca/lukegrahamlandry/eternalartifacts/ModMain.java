@@ -8,6 +8,7 @@ import ca.lukegrahamlandry.eternalartifacts.registry.BlockInit;
 import ca.lukegrahamlandry.eternalartifacts.registry.ItemInit;
 import ca.lukegrahamlandry.eternalartifacts.registry.TileTypeInit;
 import net.minecraft.block.Block;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
@@ -29,6 +30,7 @@ public class ModMain {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public static FishingXpValues FISHING_XP_CONFIG;
+    public static MinecraftServer server;
 
     public ModMain() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -44,6 +46,5 @@ public class ModMain {
 
     private void setup(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(ArtifactExperience.class, new ArtifactXpCapability.Storage(), ArtifactExperienceImpl::new);
-        FISHING_XP_CONFIG = new FishingXpValues();
     }
 }
