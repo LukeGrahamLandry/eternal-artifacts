@@ -1,10 +1,14 @@
 package ca.lukegrahamlandry.eternalartifacts;
 
+import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactExperience;
+import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactExperienceImpl;
+import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactXpCapability;
 import ca.lukegrahamlandry.eternalartifacts.registry.BlockInit;
 import ca.lukegrahamlandry.eternalartifacts.registry.ItemInit;
 import ca.lukegrahamlandry.eternalartifacts.registry.TileTypeInit;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,7 +21,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(ModMain.MOD_ID)
 public class ModMain {
     public static final String MOD_ID = "eternalartifacts";
@@ -37,6 +40,6 @@ public class ModMain {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-
+        CapabilityManager.INSTANCE.register(ArtifactExperience.class, new ArtifactXpCapability.Storage(), ArtifactExperienceImpl::new);
     }
 }
