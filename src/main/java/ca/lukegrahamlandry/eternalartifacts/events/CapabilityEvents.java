@@ -32,7 +32,7 @@ public class CapabilityEvents {
     @SubscribeEvent
     public static void login(PlayerEvent.PlayerLoggedInEvent event){
         if (!event.getEntityLiving().level.isClientSide()){
-            
+
         }
     }
 }

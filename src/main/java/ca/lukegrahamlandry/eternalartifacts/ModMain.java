@@ -1,5 +1,6 @@
 package ca.lukegrahamlandry.eternalartifacts;
 
+import ca.lukegrahamlandry.eternalartifacts.config.FishingXpValues;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactExperience;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactExperienceImpl;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactXpCapability;
@@ -27,6 +28,8 @@ public class ModMain {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
+    public static FishingXpValues FISHING_XP_CONFIG;
+
     public ModMain() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
@@ -41,5 +44,6 @@ public class ModMain {
 
     private void setup(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(ArtifactExperience.class, new ArtifactXpCapability.Storage(), ArtifactExperienceImpl::new);
+        FISHING_XP_CONFIG = new FishingXpValues();
     }
 }
