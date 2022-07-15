@@ -1,6 +1,7 @@
 package ca.lukegrahamlandry.eternalartifacts.leveling;
 
 import ca.lukegrahamlandry.eternalartifacts.ModMain;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
@@ -8,6 +9,7 @@ import java.util.Map;
 
 public interface ArtifactExperience {
     ResourceLocation FISHING = new ResourceLocation(ModMain.MOD_ID, "fishing");
+    ResourceLocation[] ARTIFACT_TYPES = new ResourceLocation[]{FISHING};
 
     int getExperience(ResourceLocation type);
     int getTotalExperience(ResourceLocation type);
@@ -21,4 +23,6 @@ public interface ArtifactExperience {
 
     CompoundNBT write();
     void read(CompoundNBT tag);
+
+    void sync(PlayerEntity player);
 }

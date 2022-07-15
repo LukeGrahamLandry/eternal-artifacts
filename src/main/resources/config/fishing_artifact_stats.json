@@ -2,16 +2,64 @@
   "extra_hearts": {
     "iconX": 10,
     "iconY": 20,
-    "iconItem": "minecraft:cooked_beef"
+    "iconItem": "minecraft:cooked_beef",
+    "upgradeItemCost": [
+      {
+        "minecraft:apple": 4
+      },
+      {
+        "minecraft:diamond": 1
+      }
+    ],
+    "upgradeLevelCost": [
+      {
+        "eternalartifacts:fishing": 10
+      },
+      {
+        "eternalartifacts:fishing": 15
+      }
+    ]
   },
   "strength_in_water": {
     "iconX": 30,
     "iconY": 50,
-    "iconItem": "minecraft:iron_sword"
+    "iconItem": "minecraft:iron_sword",
+    "upgradeItemCost": [
+      {
+        "minecraft:apple": 1
+      },
+      {
+        "minecraft:diamond": 5
+      }
+    ],
+    "upgradeLevelCost": [
+      {
+        "eternalartifacts:fishing": 1
+      },
+      {
+        "eternalartifacts:fishing": 2
+      }
+    ]
   },
   "walk_on_water": {
     "iconX": 50,
     "iconY": 50,
-    "iconItem": "minecraft:leather_boots"
+    "iconItem": "minecraft:leather_boots",
+    "upgradeItemCost": [
+      {
+        "minecraft:apple": 3
+      },
+      {
+        "minecraft:diamond": 2
+      }
+    ],
+    "upgradeLevelCost": [
+      {
+        "eternalartifacts:fishing": 5
+      },
+      {
+        "eternalartifacts:fishing": 10
+      }
+    ]
   }
 }

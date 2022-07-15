@@ -1,8 +1,13 @@
 package ca.lukegrahamlandry.eternalartifacts.leveling;
 
+import ca.lukegrahamlandry.eternalartifacts.network.NetworkInit;
+import ca.lukegrahamlandry.eternalartifacts.network.clientbound.SyncArtifactCapabilityPacket;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +39,8 @@ public class ArtifactExperienceImpl implements ArtifactExperience {
         xp.put(type, xp.getOrDefault(type, 0) - amount);
         return true;
     }
+
+
 
     @Override
     public boolean hasSkill(ResourceLocation artifact, ResourceLocation skill) {
@@ -95,6 +102,13 @@ public class ArtifactExperienceImpl implements ArtifactExperience {
             for (String key : skillsData.getAllKeys()){
                 skills.put(new ResourceLocation(key), readIntMap(skillsData.getCompound(key)));
             }
+        }
+    }
+
+    @Override
+    public void sync(PlayerEntity player) {
+        if (!player.level.isClientSide()){
+            NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)player), new SyncArtifactCapabilityPacket(this));
         }
     }
 }

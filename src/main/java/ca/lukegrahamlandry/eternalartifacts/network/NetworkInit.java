@@ -2,6 +2,7 @@ package ca.lukegrahamlandry.eternalartifacts.network;
 
 import ca.lukegrahamlandry.eternalartifacts.ModMain;
 import ca.lukegrahamlandry.eternalartifacts.network.clientbound.ExperienceUpdatePacket;
+import ca.lukegrahamlandry.eternalartifacts.network.clientbound.SyncArtifactCapabilityPacket;
 import ca.lukegrahamlandry.eternalartifacts.network.clientbound.SyncJsonConfigPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -20,5 +21,6 @@ public class NetworkInit {
 
         INSTANCE.registerMessage(nextID(), ExperienceUpdatePacket.class, ExperienceUpdatePacket::encode, ExperienceUpdatePacket::new, ExperienceUpdatePacket::handle);
         INSTANCE.registerMessage(nextID(), SyncJsonConfigPacket.class, SyncJsonConfigPacket::encode, SyncJsonConfigPacket::new, SyncJsonConfigPacket::handle);
+        INSTANCE.registerMessage(nextID(), SyncArtifactCapabilityPacket.class, SyncArtifactCapabilityPacket::encode, SyncArtifactCapabilityPacket::new, SyncArtifactCapabilityPacket::handle);
     }
 }

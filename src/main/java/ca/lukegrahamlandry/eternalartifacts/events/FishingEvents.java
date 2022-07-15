@@ -38,6 +38,7 @@ public class FishingEvents {
                 if (xp > 0) {
                     artifactExperience.addExperience(ArtifactExperience.FISHING, xp);
                     NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new ExperienceUpdatePacket(ArtifactExperience.FISHING, artifactExperience.getExperience(ArtifactExperience.FISHING), ModMain.FISHING_XP_CONFIG.xpDisplayRatio()));
+                    artifactExperience.sync(event.getPlayer());
                 }
             });
         }
@@ -48,6 +49,7 @@ public class FishingEvents {
         if (!event.getEntityLiving().level.isClientSide()){
             ArtifactXpCapability.ifPresent(event.getPlayer(), artifactExperience -> {
                 NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new ExperienceUpdatePacket(ArtifactExperience.FISHING, artifactExperience.getExperience(ArtifactExperience.FISHING), ModMain.FISHING_XP_CONFIG.xpDisplayRatio()));
+                artifactExperience.sync(event.getPlayer());
             });
 
             NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), SyncJsonConfigPacket.fishingSkills(ModMain.FISHING_SKILL_STATS.data));

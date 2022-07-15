@@ -48,5 +48,7 @@ public class SkillsConfig {
     public static class SkillStats {
         public int iconX, iconY;
         public String iconItem;
+        public Map<String, Integer>[] upgradeItemCost;
+        public Map<String, Integer>[] upgradeLevelCost;
     }
 }
