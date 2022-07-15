@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+// TODO: use /reload command
 public class JsonConfig {
     static FolderName SERVERCONFIG = new FolderName("serverconfig");
 

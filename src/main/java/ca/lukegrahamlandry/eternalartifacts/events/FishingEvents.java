@@ -3,20 +3,16 @@ package ca.lukegrahamlandry.eternalartifacts.events;
 
 import ca.lukegrahamlandry.eternalartifacts.ModMain;
 import ca.lukegrahamlandry.eternalartifacts.config.FishingXpValues;
+import ca.lukegrahamlandry.eternalartifacts.config.SkillsConfig;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactExperience;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactXpCapability;
-import ca.lukegrahamlandry.eternalartifacts.network.ExperienceUpdatePacket;
+import ca.lukegrahamlandry.eternalartifacts.network.clientbound.ExperienceUpdatePacket;
 import ca.lukegrahamlandry.eternalartifacts.network.NetworkInit;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import ca.lukegrahamlandry.eternalartifacts.network.clientbound.SyncJsonConfigPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
@@ -27,7 +23,7 @@ public class FishingEvents {
     @SubscribeEvent
     public static void serverInit(final FMLServerStartingEvent event) {
         ModMain.server = event.getServer();
-        ModMain.FISHING_XP_CONFIG = new FishingXpValues();
+        ModMain.loadConfigs();
     }
 
     @SubscribeEvent
@@ -39,8 +35,10 @@ public class FishingEvents {
                     xp += ModMain.FISHING_XP_CONFIG.getXpValue(stack.getItem()) * stack.getCount();
                 }
                 System.out.println("fishing xp " + xp);
-                artifactExperience.addExperience(ArtifactExperience.FISHING, xp);
-                NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new ExperienceUpdatePacket(ArtifactExperience.FISHING, artifactExperience.getExperience(ArtifactExperience.FISHING), ModMain.FISHING_XP_CONFIG.xpDisplayRatio()));
+                if (xp > 0) {
+                    artifactExperience.addExperience(ArtifactExperience.FISHING, xp);
+                    NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new ExperienceUpdatePacket(ArtifactExperience.FISHING, artifactExperience.getExperience(ArtifactExperience.FISHING), ModMain.FISHING_XP_CONFIG.xpDisplayRatio()));
+                }
             });
         }
     }
@@ -51,6 +49,8 @@ public class FishingEvents {
             ArtifactXpCapability.ifPresent(event.getPlayer(), artifactExperience -> {
                 NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new ExperienceUpdatePacket(ArtifactExperience.FISHING, artifactExperience.getExperience(ArtifactExperience.FISHING), ModMain.FISHING_XP_CONFIG.xpDisplayRatio()));
             });
+
+            NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), SyncJsonConfigPacket.fishingSkills(ModMain.FISHING_SKILL_STATS.data));
         }
     }
 }

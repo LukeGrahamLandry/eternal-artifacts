@@ -1,0 +1,17 @@
+{
+  "extra_hearts": {
+    "iconX": 10,
+    "iconY": 20,
+    "iconItem": "minecraft:cooked_beef"
+  },
+  "strength_in_water": {
+    "iconX": 30,
+    "iconY": 50,
+    "iconItem": "minecraft:iron_sword"
+  },
+  "walk_on_water": {
+    "iconX": 50,
+    "iconY": 50,
+    "iconItem": "minecraft:leather_boots"
+  }
+}

@@ -1,7 +1,6 @@
-package ca.lukegrahamlandry.eternalartifacts.network;
+package ca.lukegrahamlandry.eternalartifacts.network.clientbound;
 
 import ca.lukegrahamlandry.eternalartifacts.client.HudEvents;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -24,7 +23,7 @@ public class ExperienceUpdatePacket {
         this(buf.readResourceLocation(), buf.readInt(), buf.readInt());
     }
 
-    public static void toBytes(ExperienceUpdatePacket msg, PacketBuffer buf) {
+    public static void encode(ExperienceUpdatePacket msg, PacketBuffer buf) {
         buf.writeResourceLocation(msg.type);
         buf.writeInt(msg.xpAmount);
         buf.writeInt(msg.ratio);

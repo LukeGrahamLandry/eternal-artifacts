@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "eternalartifacts.refmap.json",
   "mixins": [
+    "ReloadCommandMixin"
   ],
   "client": [
     "M1Fix"
