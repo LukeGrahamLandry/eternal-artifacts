@@ -25,4 +25,6 @@ public interface ArtifactExperience {
     void read(CompoundNBT tag);
 
     void sync(PlayerEntity player);
+
+    int getXpDisplayRatio(ResourceLocation resourceLocation);
 }

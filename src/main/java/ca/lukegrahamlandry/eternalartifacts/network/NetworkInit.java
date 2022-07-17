@@ -4,6 +4,7 @@ import ca.lukegrahamlandry.eternalartifacts.ModMain;
 import ca.lukegrahamlandry.eternalartifacts.network.clientbound.ExperienceUpdatePacket;
 import ca.lukegrahamlandry.eternalartifacts.network.clientbound.SyncArtifactCapabilityPacket;
 import ca.lukegrahamlandry.eternalartifacts.network.clientbound.SyncJsonConfigPacket;
+import ca.lukegrahamlandry.eternalartifacts.network.serverbound.UpgradeSkillPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -22,5 +23,6 @@ public class NetworkInit {
         INSTANCE.registerMessage(nextID(), ExperienceUpdatePacket.class, ExperienceUpdatePacket::encode, ExperienceUpdatePacket::new, ExperienceUpdatePacket::handle);
         INSTANCE.registerMessage(nextID(), SyncJsonConfigPacket.class, SyncJsonConfigPacket::encode, SyncJsonConfigPacket::new, SyncJsonConfigPacket::handle);
         INSTANCE.registerMessage(nextID(), SyncArtifactCapabilityPacket.class, SyncArtifactCapabilityPacket::encode, SyncArtifactCapabilityPacket::new, SyncArtifactCapabilityPacket::handle);
+        INSTANCE.registerMessage(nextID(), UpgradeSkillPacket.class, UpgradeSkillPacket::encode, UpgradeSkillPacket::new, UpgradeSkillPacket::handle);
     }
 }

@@ -1,5 +1,6 @@
 package ca.lukegrahamlandry.eternalartifacts.leveling;
 
+import ca.lukegrahamlandry.eternalartifacts.ModMain;
 import ca.lukegrahamlandry.eternalartifacts.network.NetworkInit;
 import ca.lukegrahamlandry.eternalartifacts.network.clientbound.SyncArtifactCapabilityPacket;
 import com.google.common.collect.ImmutableMap;
@@ -19,12 +20,12 @@ public class ArtifactExperienceImpl implements ArtifactExperience {
 
     @Override
     public int getExperience(ResourceLocation type) {
-        return xp.get(type);
+        return xp.getOrDefault(type, 0);
     }
 
     @Override
     public int getTotalExperience(ResourceLocation type) {
-        return totalXp.get(type);
+        return totalXp.getOrDefault(type, 0);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ArtifactExperienceImpl implements ArtifactExperience {
 
     @Override
     public int getSkillLevel(ResourceLocation artifact, ResourceLocation skill) {
-        return skills.containsKey(artifact) ?  skills.get(artifact).get(skill) : 0;
+        return skills.containsKey(artifact) && skills.get(artifact).containsKey(skill) ? skills.get(artifact).get(skill) : 0;
     }
 
     @Override
@@ -110,5 +111,11 @@ public class ArtifactExperienceImpl implements ArtifactExperience {
         if (!player.level.isClientSide()){
             NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)player), new SyncArtifactCapabilityPacket(this));
         }
+    }
+
+    @Override
+    public int getXpDisplayRatio(ResourceLocation type) {
+        if (FISHING.equals(type)) return ModMain.FISHING_XP_CONFIG.xpDisplayRatio();
+        return 0;
     }
 }

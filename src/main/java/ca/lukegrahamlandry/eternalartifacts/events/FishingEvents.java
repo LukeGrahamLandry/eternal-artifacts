@@ -34,7 +34,6 @@ public class FishingEvents {
                 for (ItemStack stack : event.getDrops()){
                     xp += ModMain.FISHING_XP_CONFIG.getXpValue(stack.getItem()) * stack.getCount();
                 }
-                System.out.println("fishing xp " + xp);
                 if (xp > 0) {
                     artifactExperience.addExperience(ArtifactExperience.FISHING, xp);
                     NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new ExperienceUpdatePacket(ArtifactExperience.FISHING, artifactExperience.getExperience(ArtifactExperience.FISHING), ModMain.FISHING_XP_CONFIG.xpDisplayRatio()));
@@ -49,6 +48,7 @@ public class FishingEvents {
         if (!event.getEntityLiving().level.isClientSide()){
             ArtifactXpCapability.ifPresent(event.getPlayer(), artifactExperience -> {
                 NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new ExperienceUpdatePacket(ArtifactExperience.FISHING, artifactExperience.getExperience(ArtifactExperience.FISHING), ModMain.FISHING_XP_CONFIG.xpDisplayRatio()));
+                artifactExperience.addExperience(ArtifactExperience.FISHING, 100);
                 artifactExperience.sync(event.getPlayer());
             });
 

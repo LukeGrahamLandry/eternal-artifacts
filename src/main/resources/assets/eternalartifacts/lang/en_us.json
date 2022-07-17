@@ -2,5 +2,6 @@
   "block.eternalartifacts.shell": "Prismarine Pearl",
 
 
+  "gui.eternalartifacts.fishing": "Your artifact level is %d. You have %d fishing levels to spend",
   "experience.eternalartifacts.fishing": "Fishing XP %d"
 }

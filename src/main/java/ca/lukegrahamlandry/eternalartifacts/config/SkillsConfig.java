@@ -1,7 +1,8 @@
 package ca.lukegrahamlandry.eternalartifacts.config;
 
 import ca.lukegrahamlandry.eternalartifacts.ModMain;
-import ca.lukegrahamlandry.eternalartifacts.registry.SkillType;
+import ca.lukegrahamlandry.eternalartifacts.leveling.SkillStats;
+import ca.lukegrahamlandry.eternalartifacts.leveling.SkillType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -30,8 +31,8 @@ public class SkillsConfig {
         for (SkillType skill : SkillType.values()){
             String key = skill.name().toLowerCase(Locale.ROOT);
             if (!data.has(key)){
-                // would be good if i could try to load it from the jar incase like they updated the mod
-                ModMain.LOGGER.error("serverconfig/eternalartifacts/fishing_artifact_stats.json missing key: " + key);
+                // would be good if i could try to load it from the jar in case like they updated the mod
+                ModMain.LOGGER.error("[eternalartifacts/fishing_artifact_stats.json] missing key: " + key);
                 continue;
             }
 
@@ -40,15 +41,9 @@ public class SkillsConfig {
                 skillStats.put(skill, stats);
             } catch (JsonSyntaxException e){
                 e.printStackTrace();
-                ModMain.LOGGER.error("serverconfig/eternalartifacts/fishing_artifact_stats.json failed to parse object: " + key);
+                ModMain.LOGGER.error("[eternalartifacts/fishing_artifact_stats.json] failed to parse object: " + key);
             }
         }
     }
 
-    public static class SkillStats {
-        public int iconX, iconY;
-        public String iconItem;
-        public Map<String, Integer>[] upgradeItemCost;
-        public Map<String, Integer>[] upgradeLevelCost;
-    }
 }

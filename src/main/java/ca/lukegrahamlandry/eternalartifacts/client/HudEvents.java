@@ -57,7 +57,7 @@ public class HudEvents {
             }
             int ratio = displayRatio.get(data.getKey());
             float progress = ratio == 1 ? 0 : ((float) ((nextXp - 1) % ratio) / ratio) + ((1F / ratio) * (1 - ((float)timer) / MAX_TIMER));
-            System.out.println(progress + " " + nextXp + " " + Math.floorDiv(nextXp, ratio) + " " + nextXp % ratio + " " + ratio);
+            // System.out.println(progress + " " + nextXp + " " + Math.floorDiv(nextXp, ratio) + " " + nextXp % ratio + " " + ratio);
 
             int level = Math.floorDiv(nextXp, ratio) - ((nextXp % ratio == 0) ? 1 : 0);
             renderBar(event.getMatrixStack(), data.getKey(), yShift, level, progress);

@@ -3,7 +3,10 @@ package ca.lukegrahamlandry.eternalartifacts.client.gui;
 import ca.lukegrahamlandry.eternalartifacts.ModMain;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactExperience;
 import ca.lukegrahamlandry.eternalartifacts.leveling.ArtifactXpCapability;
-import ca.lukegrahamlandry.eternalartifacts.registry.SkillType;
+import ca.lukegrahamlandry.eternalartifacts.leveling.SkillType;
+import ca.lukegrahamlandry.eternalartifacts.leveling.SkillUpgradeHelper;
+import ca.lukegrahamlandry.eternalartifacts.network.NetworkInit;
+import ca.lukegrahamlandry.eternalartifacts.network.serverbound.UpgradeSkillPacket;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -19,7 +22,6 @@ import net.minecraft.util.text.*;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FishingSkillsGui extends Screen {
@@ -27,43 +29,80 @@ public class FishingSkillsGui extends Screen {
         super(new StringTextComponent("Fishing Traits"));
     }
 
+    int infoY = 100;
+
     @Override
     protected void init() {
         super.init();
+        clearStuff();
+
         ArtifactXpCapability.ifPresent(Minecraft.getInstance().player, (xpData) -> {
             for (SkillType skill : SkillType.values()){
-                int level = xpData.getSkillLevel(ArtifactExperience.FISHING, new ResourceLocation(ModMain.MOD_ID, skill.name().toLowerCase(Locale.ROOT)));
-                TextComponent name = new TranslationTextComponent("skill." + ModMain.MOD_ID + "." + skill.name().toLowerCase(Locale.ROOT));
-                this.addButton(new ItemButton(skill.getStats().iconX, skill.getStats().iconY, (button) -> this.selectSkill(skill, level + 1), (p_238897_1_, p_238897_2_, p_238897_3_, p_238897_4_) -> {
+                int level = xpData.getSkillLevel(ArtifactExperience.FISHING, skill.getKey());
+                TextComponent name = new TranslationTextComponent("skill." + ModMain.MOD_ID + "." + skill.getKey().getPath());
+                Widget b = new ItemButton(skill.getStats().iconX, skill.getStats().iconY, (button) -> this.selectSkill(skill, level + 1), (p_238897_1_, p_238897_2_, p_238897_3_, p_238897_4_) -> {
                     this.renderTooltip(p_238897_2_, name, p_238897_3_, p_238897_4_);
-                }, ForgeRegistries.ITEMS.getValue(new ResourceLocation(skill.getStats().iconItem)), String.valueOf(level)));
+                }, ForgeRegistries.ITEMS.getValue(new ResourceLocation(skill.getStats().iconItem)), String.valueOf(level));
+                skillButtons.add(b);
+                this.addButton(b);
             }
 
             int currentLevel = (int) Math.floor(xpData.getExperience(ArtifactExperience.FISHING) / (float) ModMain.FISHING_XP_CONFIG.xpDisplayRatio());
             int totalLevel = (int) Math.floor(xpData.getTotalExperience(ArtifactExperience.FISHING) / (float) ModMain.FISHING_XP_CONFIG.xpDisplayRatio());
-            this.levelText = new StringTextComponent("Your artifact is level " + totalLevel + ". You have " + currentLevel + " fishing levels to spend.");
+            this.levelText = new TranslationTextComponent("gui.eternalartifacts.fishing", totalLevel, currentLevel);
         });
 
-        this.doUpgrade = new Button(0, 120, 75, 20, new StringTextComponent("Upgrade"), this::doUpgradePress, (a, b, c, d) -> {});
+        // todo skill dependencies. required: []. then have those skill icons show up below items/xp
+
+        this.doUpgrade = new Button(0, infoY, 150, 20, new StringTextComponent("Upgrade"), this::doUpgradePress, (a, b, c, d) -> {});
         this.doUpgrade.active = false;
         this.addButton(this.doUpgrade);
     }
 
-    private void doUpgradePress(Button button) {
+    private void clearStuff() {
+        upgradeSkill = null;
+        upgradeTargetLevel = 0;
+        for (Widget w : itemCost){
+            w.visible = false;
+        }
+        itemCost.clear();
+        for (Widget w : skillButtons){
+            w.visible = false;
+        }
+        skillButtons.clear();
+        upgradeText = null;
+        if (doUpgrade != null) doUpgrade.visible = false;
+    }
 
+    private void doUpgradePress(Button button) {
+        NetworkInit.INSTANCE.sendToServer(new UpgradeSkillPacket(ArtifactExperience.FISHING, this.upgradeSkill.getKey(), this.upgradeTargetLevel));
+        SkillUpgradeHelper.tryUnlock(Minecraft.getInstance().player, ArtifactExperience.FISHING, upgradeSkill.getKey(), this.upgradeTargetLevel);
+        init();
     }
 
     Button doUpgrade;
-    int upgradeTargetLevel = 0;
-    SkillType upgradeSkill = null;
+    int upgradeTargetLevel;
+    SkillType upgradeSkill;
+    List<Widget> skillButtons = new ArrayList<>();
     List<Widget> itemCost = new ArrayList<>();
     IFormattableTextComponent upgradeText;
     IFormattableTextComponent levelText;
 
-
     private void selectSkill(SkillType skill, int targetLevel) {
+        if (skill.getStats().getMaxLevel() < targetLevel){
+            this.upgradeSkill = skill;
+            for (Widget w : itemCost){
+                w.visible = false;
+            }
+            itemCost.clear();
+            upgradeText = new TranslationTextComponent("skill." + ModMain.MOD_ID + "." + skill.getKey().getPath());
+            this.doUpgrade.setMessage(new StringTextComponent("Max Level"));
+            this.doUpgrade.active = false;
+            return;
+        }
+
         if (skill.getStats().upgradeItemCost == null || skill.getStats().upgradeItemCost.length <= targetLevel-1 || skill.getStats().upgradeLevelCost == null ||  skill.getStats().upgradeLevelCost.length <= targetLevel-1){
-            System.out.println("Invalid serverconfig/eternalartifacts/fishing_artifact_stats.json. The key "  + skill.name().toLowerCase(Locale.ROOT) + " must have arrays upgradeItemCost and upgradeLevelCost with length greater than " + targetLevel);
+            System.out.println("Invalid serverconfig/eternalartifacts/fishing_artifact_stats.json. The key "  + skill.getKey().getPath() + " must have arrays upgradeItemCost and upgradeLevelCost with length greater than " + targetLevel);
             return;
         }
         this.upgradeTargetLevel = targetLevel;
@@ -74,7 +113,7 @@ public class FishingSkillsGui extends Screen {
         }
         itemCost.clear();
 
-        int x = 80;
+        int x = 160;
         boolean canAfford = true;
         for (Map.Entry<String, Integer> cost : skill.getStats().upgradeItemCost[targetLevel-1].entrySet()){
             Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(cost.getKey()));
@@ -85,11 +124,11 @@ public class FishingSkillsGui extends Screen {
                 if (stack.getItem() == item) count += stack.getCount();
             }
             if (count < cost.getValue()) canAfford = false;
-            displayItem(x, 120, item, cost.getValue(), count >= cost.getValue(), new TranslationTextComponent(item.getDescriptionId()).append(new StringTextComponent(": " + count + "/" + cost.getValue())));
+            displayItem(x, infoY + 20, item, cost.getValue(), count >= cost.getValue(), new TranslationTextComponent(item.getDescriptionId()).append(new StringTextComponent(": " + count + "/" + cost.getValue())));
             x += 20;
         }
 
-        x = 80;
+        x = 160;
         for (Map.Entry<String, Integer> cost : skill.getStats().upgradeLevelCost[targetLevel-1].entrySet()){
             Item item = Items.BARRIER;
             if (cost.getKey().equals("vanilla")){
@@ -105,17 +144,17 @@ public class FishingSkillsGui extends Screen {
                 currentLevels.set(Minecraft.getInstance().player.experienceLevel);
             } else {
                 ArtifactXpCapability.ifPresent(Minecraft.getInstance().player, (xpData) -> {
-                    currentLevels.set(xpData.getExperience(new ResourceLocation(cost.getKey())) / ModMain.FISHING_XP_CONFIG.xpDisplayRatio());
+                    currentLevels.set(xpData.getExperience(new ResourceLocation(cost.getKey())) / xpData.getXpDisplayRatio(ArtifactExperience.FISHING));
                 });
             }
 
             if (currentLevels.get() < levelCost) canAfford = false;
 
-            displayItem(x, 145, item, levelCost, currentLevels.get() >= levelCost, new StringTextComponent(cost.getKey() + " levels: " + currentLevels.get() + "/" + levelCost));
+            displayItem(x, infoY + 45, item, levelCost, currentLevels.get() >= levelCost, new StringTextComponent(cost.getKey() + " levels: " + currentLevels.get() + "/" + levelCost));
             x += 20;
         }
 
-        upgradeText = new TranslationTextComponent("skill." + ModMain.MOD_ID + "." + skill.name().toLowerCase(Locale.ROOT));
+        upgradeText = new TranslationTextComponent("skill." + ModMain.MOD_ID + "." + skill.getKey().getPath());
         this.doUpgrade.setMessage(new StringTextComponent(upgradeTargetLevel == 1 ? "Unlock" : "Upgrade to level " + targetLevel));
         this.doUpgrade.active = canAfford;
     }
@@ -135,7 +174,7 @@ public class FishingSkillsGui extends Screen {
 
         if (this.upgradeSkill != null){
             FontRenderer fontrenderer = Minecraft.getInstance().font;
-            drawString(matrixStack, fontrenderer, this.upgradeText, 0, 100, 0xFFFFFF00);
+            drawString(matrixStack, fontrenderer, this.upgradeText, 0, infoY, 0xFFFFFF00);
             drawString(matrixStack, fontrenderer, this.levelText, 0, 0, 0xFFFFFF00);
         }
     }
