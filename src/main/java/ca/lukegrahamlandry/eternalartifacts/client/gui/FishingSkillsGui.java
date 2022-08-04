@@ -40,21 +40,21 @@ public class FishingSkillsGui extends Screen {
             for (SkillType skill : SkillType.values()){
                 int level = xpData.getSkillLevel(ArtifactExperience.FISHING, skill.getKey());
                 TextComponent name = new TranslationTextComponent("skill." + ModMain.MOD_ID + "." + skill.getKey().getPath());
-                Widget b = new ItemButton(skill.getStats().iconX, skill.getStats().iconY, (button) -> this.selectSkill(skill, level + 1), (p_238897_1_, p_238897_2_, p_238897_3_, p_238897_4_) -> {
+                Widget b = new TextureButton(skill.getStats().iconX, skill.getStats().iconY, (button) -> this.selectSkill(skill, level + 1), (p_238897_1_, p_238897_2_, p_238897_3_, p_238897_4_) -> {
                     this.renderTooltip(p_238897_2_, name, p_238897_3_, p_238897_4_);
-                }, ForgeRegistries.ITEMS.getValue(new ResourceLocation(skill.getStats().iconItem)), String.valueOf(level));
+                }, new ResourceLocation(skill.getStats().iconTexture), String.valueOf(level));
                 skillButtons.add(b);
                 this.addButton(b);
             }
 
             int currentLevel = (int) Math.floor(xpData.getExperience(ArtifactExperience.FISHING) / (float) ModMain.FISHING_XP_CONFIG.xpDisplayRatio());
             int totalLevel = (int) Math.floor(xpData.getTotalExperience(ArtifactExperience.FISHING) / (float) ModMain.FISHING_XP_CONFIG.xpDisplayRatio());
-            this.levelText = new TranslationTextComponent("gui.eternalartifacts.fishing", totalLevel, currentLevel);
+            this.levelText = new TranslationTextComponent("gui.eternalartifacts.fishing", xpData.getArtifactLevel(ArtifactExperience.FISHING), currentLevel);
         });
 
         // todo skill dependencies. required: []. then have those skill icons show up below items/xp
 
-        this.doUpgrade = new Button(0, infoY, 150, 20, new StringTextComponent("Upgrade"), this::doUpgradePress, (a, b, c, d) -> {});
+        this.doUpgrade = new Button(0, infoY + 20, 150, 20, new StringTextComponent("Upgrade"), this::doUpgradePress, (a, b, c, d) -> {});
         this.doUpgrade.active = false;
         this.addButton(this.doUpgrade);
     }
@@ -101,10 +101,6 @@ public class FishingSkillsGui extends Screen {
             return;
         }
 
-        if (skill.getStats().upgradeItemCost == null || skill.getStats().upgradeItemCost.length <= targetLevel-1 || skill.getStats().upgradeLevelCost == null ||  skill.getStats().upgradeLevelCost.length <= targetLevel-1){
-            System.out.println("Invalid serverconfig/eternalartifacts/fishing_artifact_stats.json. The key "  + skill.getKey().getPath() + " must have arrays upgradeItemCost and upgradeLevelCost with length greater than " + targetLevel);
-            return;
-        }
         this.upgradeTargetLevel = targetLevel;
         this.upgradeSkill = skill;
 
@@ -115,7 +111,7 @@ public class FishingSkillsGui extends Screen {
 
         int x = 160;
         boolean canAfford = true;
-        for (Map.Entry<String, Integer> cost : skill.getStats().upgradeItemCost[targetLevel-1].entrySet()){
+        for (Map.Entry<String, Integer> cost : skill.getStats().getItemUpgradeCost(targetLevel).entrySet()){
             Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(cost.getKey()));
             int count = 0;
             PlayerInventory inv = Minecraft.getInstance().player.inventory;
@@ -129,7 +125,7 @@ public class FishingSkillsGui extends Screen {
         }
 
         x = 160;
-        for (Map.Entry<String, Integer> cost : skill.getStats().upgradeLevelCost[targetLevel-1].entrySet()){
+        for (Map.Entry<String, Integer> cost : skill.getStats().getLevelUpgradeCost(targetLevel).entrySet()){
             Item item = Items.BARRIER;
             if (cost.getKey().equals("vanilla")){
                 item = Items.EXPERIENCE_BOTTLE;

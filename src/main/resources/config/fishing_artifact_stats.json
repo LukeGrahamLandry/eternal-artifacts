@@ -2,7 +2,7 @@
   "extra_hearts": {
     "iconX": 10,
     "iconY": 20,
-    "iconItem": "minecraft:cooked_beef",
+    "iconTexture": "minecraft:textures/item/cooked_beef.png",
     "upgradeItemCost": [
       {
         "minecraft:apple": 4
@@ -23,7 +23,7 @@
   "strength_in_water": {
     "iconX": 30,
     "iconY": 50,
-    "iconItem": "minecraft:iron_sword",
+    "iconTexture": "minecraft:textures/item/iron_sword.png",
     "upgradeItemCost": [
       {
         "minecraft:apple": 1
@@ -39,12 +39,18 @@
       {
         "eternalartifacts:fishing": 2
       }
+    ],
+    "damageScaleFactor": [0.35, 0.5, 0.70, 1],
+    "effects": [
+      "minecraft:strength 0",
+      "minecraft:strength 1",
+      "minecraft:strength 1 minecraft:regen 0"
     ]
   },
   "walk_on_water": {
     "iconX": 50,
     "iconY": 50,
-    "iconItem": "minecraft:leather_boots",
+    "iconTexture": "minecraft:textures/item/leather_boots.png",
     "upgradeItemCost": [
       {
         "minecraft:apple": 3
@@ -61,5 +67,27 @@
         "eternalartifacts:fishing": 10
       }
     ]
+  },
+  "more_air": {
+    "iconX": 150,
+    "iconY": 150,
+    "iconTexture": "minecraft:textures/item/glass_bottle.png",
+    "upgradeItemCost": [
+      {
+        "minecraft:apple": 3
+      },
+      {
+        "minecraft:diamond": 2
+      }
+    ],
+    "upgradeLevelCost": [
+      {
+        "eternalartifacts:fishing": 5
+      },
+      {
+        "eternalartifacts:fishing": 10
+      }
+    ],
+    "airAmountMultiplier": [4, 8]
   }
 }

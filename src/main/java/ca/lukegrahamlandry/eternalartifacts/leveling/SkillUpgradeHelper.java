@@ -22,12 +22,12 @@ public class SkillUpgradeHelper {
 
             SkillStats skillData = SkillType.getSkill(skill).getStats();
 
-            boolean affordItems = spendItems(player, skillData.upgradeItemCost[targetLevel - 1], true);
-            boolean affordXp = spendLevels(player, skillData.upgradeLevelCost[targetLevel - 1], true);
+            boolean affordItems = spendItems(player, skillData.getItemUpgradeCost(targetLevel), true);
+            boolean affordXp = spendLevels(player, skillData.getLevelUpgradeCost(targetLevel), true);
             System.out.println(affordItems + " " + affordItems);
             if (affordItems && affordXp){
-                spendItems(player, skillData.upgradeItemCost[targetLevel - 1], false);
-                spendLevels(player, skillData.upgradeLevelCost[targetLevel - 1], false);
+                spendItems(player, skillData.getItemUpgradeCost(targetLevel), false);
+                spendLevels(player, skillData.getLevelUpgradeCost(targetLevel), false);
                 xpData.learnSkill(artifact, skill, targetLevel);
                 xpData.sync(player);
             }

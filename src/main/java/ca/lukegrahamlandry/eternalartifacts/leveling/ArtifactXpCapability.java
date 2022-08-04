@@ -22,6 +22,7 @@ public class ArtifactXpCapability implements ICapabilitySerializable<CompoundNBT
     }
 
     public static void ifPresent(PlayerEntity player, Consumer<ArtifactExperience> action){
+        if (player == null) return;
         player.getCapability(CAP).ifPresent(action::accept);
     }
 

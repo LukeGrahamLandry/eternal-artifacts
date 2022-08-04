@@ -118,4 +118,9 @@ public class ArtifactExperienceImpl implements ArtifactExperience {
         if (FISHING.equals(type)) return ModMain.FISHING_XP_CONFIG.xpDisplayRatio();
         return 0;
     }
+
+    @Override
+    public int getArtifactLevel(ResourceLocation artifact) {
+        return skills.get(artifact).values().stream().reduce(0, Integer::sum);
+    }
 }

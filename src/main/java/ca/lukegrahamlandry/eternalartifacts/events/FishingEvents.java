@@ -37,7 +37,6 @@ public class FishingEvents {
                 if (xp > 0) {
                     artifactExperience.addExperience(ArtifactExperience.FISHING, xp);
                     NetworkInit.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()), new ExperienceUpdatePacket(ArtifactExperience.FISHING, artifactExperience.getExperience(ArtifactExperience.FISHING), ModMain.FISHING_XP_CONFIG.xpDisplayRatio()));
-                    artifactExperience.sync(event.getPlayer());
                 }
             });
         }

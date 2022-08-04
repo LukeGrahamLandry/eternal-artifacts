@@ -3,5 +3,10 @@
 
 
   "gui.eternalartifacts.fishing": "Your artifact level is %d. You have %d fishing levels to spend",
-  "experience.eternalartifacts.fishing": "Fishing XP %d"
+  "experience.eternalartifacts.fishing": "Fishing XP %d",
+
+
+  "skill.eternalartifacts.strength_in_water": "Ocean Lord",
+  "skill.eternalartifacts.more_air": "Glub Glub!"
+
 }
