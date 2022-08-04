@@ -8,6 +8,7 @@ public class SkillStats {
     public String iconTexture;
     public Map<String, Integer>[] upgradeItemCost;
     public Map<String, Integer>[] upgradeLevelCost;
+    public Map<String, Integer>[] upgradeSkillRequirements;
 
     public int getMaxLevel() {
         return Math.max(upgradeLevelCost == null ? 0 : upgradeLevelCost.length, upgradeItemCost == null ? 0 : upgradeItemCost.length);
@@ -21,5 +22,10 @@ public class SkillStats {
     public Map<String, Integer> getLevelUpgradeCost(int targetLevel) {
         if (upgradeLevelCost == null || targetLevel > upgradeLevelCost.length) return new HashMap<>();
         return upgradeLevelCost[targetLevel-1];
+    }
+
+    public Map<String, Integer> getUpgradeSkillRequirements(int targetLevel) {
+        if (upgradeSkillRequirements == null || targetLevel > upgradeSkillRequirements.length) return new HashMap<>();
+        return upgradeSkillRequirements[targetLevel-1];
     }
 }

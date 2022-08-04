@@ -27,6 +27,10 @@ public enum SkillType {
         return valueOf(skill.getPath().toUpperCase(Locale.ROOT));
     }
 
+    public static SkillType getSkill(ResourceLocation artifact, ResourceLocation skill) {
+        return valueOf(skill.getPath().toUpperCase(Locale.ROOT));
+    }
+
     public SkillStats getStats(){
         return ModMain.FISHING_SKILL_STATS.skillStats.get(this);
     }

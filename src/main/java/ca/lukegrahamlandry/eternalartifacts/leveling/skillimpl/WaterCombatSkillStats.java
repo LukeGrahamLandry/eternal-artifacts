@@ -31,7 +31,7 @@ public class WaterCombatSkillStats extends SkillStats {
                 ResourceLocation effect = new ResourceLocation(data[i]);
                 Effect effectType = ForgeRegistries.POTIONS.getValue(effect);
                 int level = Integer.parseInt(data[i+1]);
-                effectsToGive.add(new EffectInstance(effectType, level, effectLength));
+                effectsToGive.add(new EffectInstance(effectType, effectLength, level));
             } catch (Exception e){
                 e.printStackTrace();
             }

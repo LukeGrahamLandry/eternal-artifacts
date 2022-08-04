@@ -121,6 +121,7 @@ public class ArtifactExperienceImpl implements ArtifactExperience {
 
     @Override
     public int getArtifactLevel(ResourceLocation artifact) {
+        if (!skills.containsKey(artifact)) return 0;
         return skills.get(artifact).values().stream().reduce(0, Integer::sum);
     }
 }

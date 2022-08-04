@@ -29,7 +29,8 @@ public class FishingSkillsGui extends Screen {
         super(new StringTextComponent("Fishing Traits"));
     }
 
-    int infoY = 100;
+    int infoY = 150;
+    ResourceLocation ARTIFACT_ID = ArtifactExperience.FISHING;
 
     @Override
     protected void init() {
@@ -147,6 +148,33 @@ public class FishingSkillsGui extends Screen {
             if (currentLevels.get() < levelCost) canAfford = false;
 
             displayItem(x, infoY + 45, item, levelCost, currentLevels.get() >= levelCost, new StringTextComponent(cost.getKey() + " levels: " + currentLevels.get() + "/" + levelCost));
+            x += 20;
+        }
+
+        x = 0;
+        for (Map.Entry<String, Integer> cost : skill.getStats().getUpgradeSkillRequirements(targetLevel).entrySet()){
+            String[] costData = cost.getKey().split(" ");
+            ResourceLocation artifactType = costData.length == 1 ? ARTIFACT_ID : new ResourceLocation(costData[0]);
+            ResourceLocation skillType = new ResourceLocation(costData[costData.length - 1]);
+
+            int levelNeeded = cost.getValue();
+            AtomicInteger currentLevel = new AtomicInteger(0);
+            ArtifactXpCapability.ifPresent(Minecraft.getInstance().player, (xpData) -> {
+                currentLevel.set(xpData.getSkillLevel(artifactType, skillType));
+            });
+
+            if (currentLevel.get() < levelNeeded) canAfford = false;
+
+            ResourceLocation texture = new ResourceLocation(SkillType.getSkill(artifactType, skillType).getStats().iconTexture);
+
+            IFormattableTextComponent name = new TranslationTextComponent("skill." + ModMain.MOD_ID + "." + skillType.getPath()).append(new StringTextComponent(" " + currentLevel.get() + "/" + levelNeeded));
+            Widget b = new TextureButton(x, infoY + 45, (button) -> {}, (p_238897_1_, p_238897_2_, p_238897_3_, p_238897_4_) -> {
+                this.renderTooltip(p_238897_2_, name, p_238897_3_, p_238897_4_);
+            }, texture, String.valueOf(levelNeeded));
+            b.active = canAfford;
+            itemCost.add(b);
+            this.addButton(b);
+
             x += 20;
         }
 

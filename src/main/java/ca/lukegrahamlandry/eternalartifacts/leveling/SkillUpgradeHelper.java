@@ -18,20 +18,39 @@ public class SkillUpgradeHelper {
                 System.out.println("Can only upgrade to the next level.");
                 return;
             }
-            System.out.println("upgrade " + artifact + " " + skill + " to level " + targetLevel);
 
             SkillStats skillData = SkillType.getSkill(skill).getStats();
 
             boolean affordItems = spendItems(player, skillData.getItemUpgradeCost(targetLevel), true);
             boolean affordXp = spendLevels(player, skillData.getLevelUpgradeCost(targetLevel), true);
-            System.out.println(affordItems + " " + affordItems);
-            if (affordItems && affordXp){
+            if (affordItems && affordXp && checkRequiredSkills(player, skillData.getUpgradeSkillRequirements(targetLevel), artifact)){
                 spendItems(player, skillData.getItemUpgradeCost(targetLevel), false);
                 spendLevels(player, skillData.getLevelUpgradeCost(targetLevel), false);
                 xpData.learnSkill(artifact, skill, targetLevel);
                 xpData.sync(player);
             }
         });
+    }
+
+    private static boolean checkRequiredSkills(PlayerEntity player, Map<String, Integer> upgradeSkillRequirements, ResourceLocation defaultArtifact) {
+        AtomicBoolean success = new AtomicBoolean(true);
+
+        ArtifactExperience artifactExperience = player.getCapability(ArtifactXpCapability.CAP).orElse(new ArtifactExperienceImpl());
+
+        for (Map.Entry<String, Integer> cost : upgradeSkillRequirements.entrySet()){
+            String[] costData = cost.getKey().split(" ");
+            ResourceLocation artifactType = costData.length == 1 ? defaultArtifact : new ResourceLocation(costData[0]);
+            ResourceLocation skillType = new ResourceLocation(costData[costData.length - 1]);
+            int levelNeeded = cost.getValue();
+
+            int currentLevel = artifactExperience.getSkillLevel(artifactType, skillType);
+            if (currentLevel < levelNeeded) {
+                success.set(false);
+                break;
+            }
+        }
+
+        return success.get();
     }
 
     // this already supports tags

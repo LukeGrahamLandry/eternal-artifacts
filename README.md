@@ -18,10 +18,11 @@ Each trait has its own key with the following data required, defaults are genera
 - `iconX` (int): the x coordinate of the icon in the upgrade gui
 - `iconY` (int): the y coordinate of the icon in the upgrade gui
 - `iconTexture` (string): the texture to use for gui icon. for example, `minecraft:textures/item/iron_sword.png`
-- `upgradeItemCost` (list of object): each entry in the list represents the items that the player must spend to upgrade this skill to the given level. 
+- `upgradeItemCost` (list of object): each entry in the list represents the items that the player must spend to upgrade this trait to the given level. 
 The keys in the object are the identifiers of the items (tags are supported, prefix with `#`) and the value of each key is the number of items required. 
-- `upgradeLevelCost` (list of object): each entry in the list represents the experience levels that the player must spend to upgrade this skill to the given level.
+- `upgradeLevelCost` (list of object): each entry in the list represents the experience levels that the player must spend to upgrade this trait to the given level.
   The keys in the object are the identifiers for experience type (for normal minecraft xp, use `vanilla`) and the value of each key is the number of levels required.
+- `upgradetraitRequirements` (list of object). each entry in the list represents the traits the player must have to upgrade this trait to the given level. The keys in the object identify the trait needed and the value is the level of that trait. the artifact identifier is seperated from the trait identifier by a space. if the artifact identifier is not present, it defaults to the current artifact described by the json file. ex. "eternalartifacts:fishing eternalartifacts:strength_in_water": 2. 
 
 Each trait also has its own variables that control how powerful each level is. 
 These are a list of values, where each entry is the stat for that level. 
@@ -36,7 +37,6 @@ Item matches are prioritized over tags (prefix tags with `#`). The `levelRatio` 
 - The shell block animates open when you approach. right click it to open gui and upgrade your traits 
 
 ### Traits
-
 
 #### Ocean Lord - strength_in_water
 
